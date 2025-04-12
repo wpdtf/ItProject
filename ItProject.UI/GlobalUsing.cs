@@ -1,0 +1,10 @@
+global using ItProject.UI.Domain.Models;
+global using System;
+global using System.Collections.Generic;
+global using System.Data;
+global using System.Drawing;
+global using System.Linq;
+global using System.Text;
+global using System.Text.Json;
+global using System.Threading.Tasks;
+global using System.Windows.Forms;

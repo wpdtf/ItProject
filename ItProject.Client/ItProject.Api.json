@@ -1,0 +1,340 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ItProject.Api",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Database/auth": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Авторизация",
+        "operationId": "api/Database/authPOST",
+        "requestBody": {
+          "description": "Данные для аутентификации",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Авторизация успешна",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Неверные учетные данные"
+          }
+        }
+      }
+    },
+    "/api/Database/registration": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Регистрация",
+        "operationId": "api/Database/registrationPOST",
+        "requestBody": {
+          "description": "Данные для регистрации",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Регистрация успешна"
+          }
+        }
+      }
+    },
+    "/api/Database/PasswordRecovery": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Отправка код для восстановления",
+        "operationId": "api/Database/PasswordRecoveryPOST",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Куда",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fullName",
+            "in": "query",
+            "description": "Кому",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Успешная отправка"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Проверить код для восстановления",
+        "operationId": "api/Database/PasswordRecoveryGET",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Куда",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Код для проверки",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат проверки",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Обновить пароль",
+        "operationId": "api/Database/PasswordRecoveryPUT",
+        "requestBody": {
+          "description": "Данные для обновления",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Обновлено успешно"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthDTO": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "description": "Логин клиента",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль клиента",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Модель для авторизации клиента"
+      },
+      "AuthResult": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "string",
+            "description": "Должность сотрудника",
+            "nullable": true
+          },
+          "idUser": {
+            "type": "integer",
+            "description": "Ключ пользователя",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Модель для работы с авторизацией"
+      },
+      "RegistrationDTO": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "description": "Логин клиента",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль клиента",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Модель для регистрации клиента"
+      }
+    }
+  }
+}
