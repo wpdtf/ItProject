@@ -54,7 +54,7 @@ public class Order
     public bool IsVisible { get; set; }
 
     /// <summary>
-    /// ќценка по заказу
+    /// ќценка по заказ
     /// </summary>
     public int Score { get; set; }
 }
