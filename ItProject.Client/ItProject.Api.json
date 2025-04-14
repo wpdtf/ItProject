@@ -265,6 +265,215 @@
           }
         }
       }
+    },
+    "/api/Database/CloseTicket": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Закрыть обращение",
+        "operationId": "api/Database/CloseTicketPOST",
+        "parameters": [
+          {
+            "name": "alias",
+            "in": "query",
+            "description": "приписка номера заказа",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "номер заказа",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешная отправка",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Database/Agreement": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Согласовать цену",
+        "operationId": "api/Database/AgreementPOST",
+        "parameters": [
+          {
+            "name": "alias",
+            "in": "query",
+            "description": "приписка номера заказа",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "номер заказа",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "description": "номер заказа",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешная отправка",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Database/Acceptance": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Уведомить о приемке",
+        "operationId": "api/Database/AcceptancePOST",
+        "parameters": [
+          {
+            "name": "alias",
+            "in": "query",
+            "description": "приписка номера заказа",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "номер заказа",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешная отправка",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Database/Success": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Просьба оценить",
+        "operationId": "api/Database/SuccessPOST",
+        "parameters": [
+          {
+            "name": "alias",
+            "in": "query",
+            "description": "приписка номера заказа",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "номер заказа",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешная отправка",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

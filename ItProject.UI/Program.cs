@@ -25,6 +25,7 @@ internal static class Program
          x.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=ИтЗаказы;Integrated Security=True;TrustServerCertificate=True"));
 
         services.AddScoped<IClientRepository, ClientRepository>();
+        services.AddScoped<IWorkerRepository, WorkerRepository>();
 
 
         _serviceProvider = services.BuildServiceProvider();
@@ -33,9 +34,10 @@ internal static class Program
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
 
-        var repository = _serviceProvider.GetRequiredService<IClientRepository>();
+        var clientRepository = _serviceProvider.GetRequiredService<IClientRepository>();
+        var workerRepository = _serviceProvider.GetRequiredService<IWorkerRepository>();
         var sendToBack = _serviceProvider.GetRequiredService<SendToBack>();
-        //Application.Run(new FormMain(sendToBack, repository));
-        Application.Run(new FormAuth(sendToBack, repository));
+        Application.Run(new FormMain(sendToBack, clientRepository, workerRepository));
+        //Application.Run(new FormAuth(sendToBack, clientRepository, workerRepository));
     }
 }

@@ -9,12 +9,14 @@ public partial class FormAuth : Form
 {
     private readonly SendToBack sendToBack;
     private readonly IClientRepository _repository;
+    private readonly IWorkerRepository _repository2;
 
-    public FormAuth(SendToBack apiClient, IClientRepository repository)
+    public FormAuth(SendToBack apiClient, IClientRepository repository, IWorkerRepository repository2)
     {
         InitializeComponent();
         sendToBack = apiClient;
         _repository = repository;
+        _repository2 = repository2;
     }
 
     private string HashPassword(string password)
@@ -46,7 +48,7 @@ public partial class FormAuth : Form
         {
             await sendToBack.AuthenticateAsync(request);
 
-            FormMain formMain = new(sendToBack, _repository);
+            FormMain formMain = new(sendToBack, _repository, _repository2);
             formMain.Show();
             this.Hide();
         }

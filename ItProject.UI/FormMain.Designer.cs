@@ -29,10 +29,10 @@ partial class FormMain
     private void InitializeComponent()
     {
         components = new System.ComponentModel.Container();
-        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -41,10 +41,12 @@ partial class FormMain
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
         label3 = new Label();
         panel2 = new Panel();
@@ -63,6 +65,8 @@ partial class FormMain
         guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
         flowLayoutPanel1 = new FlowLayoutPanel();
         guna2ImageButton2 = new Guna.UI2.WinForms.Guna2ImageButton();
+        tabPage3 = new TabPage();
+        guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
         panel2.SuspendLayout();
         guna2TabControl1.SuspendLayout();
         tabPage1.SuspendLayout();
@@ -100,7 +104,7 @@ partial class FormMain
         panel2.Location = new Point(0, 0);
         panel2.Margin = new Padding(4);
         panel2.Name = "panel2";
-        panel2.Size = new Size(865, 40);
+        panel2.Size = new Size(1002, 40);
         panel2.TabIndex = 15;
         // 
         // guna2ControlBox2
@@ -108,13 +112,13 @@ partial class FormMain
         guna2ControlBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         guna2ControlBox2.Animated = true;
         guna2ControlBox2.Cursor = Cursors.Hand;
-        guna2ControlBox2.CustomizableEdges = customizableEdges12;
+        guna2ControlBox2.CustomizableEdges = customizableEdges14;
         guna2ControlBox2.FillColor = Color.FromArgb(0, 64, 0);
         guna2ControlBox2.IconColor = Color.White;
-        guna2ControlBox2.Location = new Point(816, 5);
+        guna2ControlBox2.Location = new Point(953, 5);
         guna2ControlBox2.Margin = new Padding(3, 2, 3, 2);
         guna2ControlBox2.Name = "guna2ControlBox2";
-        guna2ControlBox2.ShadowDecoration.CustomizableEdges = customizableEdges13;
+        guna2ControlBox2.ShadowDecoration.CustomizableEdges = customizableEdges15;
         guna2ControlBox2.Size = new Size(35, 30);
         guna2ControlBox2.TabIndex = 19;
         guna2ControlBox2.Click += guna2ControlBox2_Click;
@@ -125,13 +129,13 @@ partial class FormMain
         guna2ControlBox1.Animated = true;
         guna2ControlBox1.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox;
         guna2ControlBox1.Cursor = Cursors.Hand;
-        guna2ControlBox1.CustomizableEdges = customizableEdges14;
+        guna2ControlBox1.CustomizableEdges = customizableEdges16;
         guna2ControlBox1.FillColor = Color.FromArgb(0, 64, 0);
         guna2ControlBox1.IconColor = Color.White;
-        guna2ControlBox1.Location = new Point(777, 5);
+        guna2ControlBox1.Location = new Point(914, 5);
         guna2ControlBox1.Margin = new Padding(3, 2, 3, 2);
         guna2ControlBox1.Name = "guna2ControlBox1";
-        guna2ControlBox1.ShadowDecoration.CustomizableEdges = customizableEdges15;
+        guna2ControlBox1.ShadowDecoration.CustomizableEdges = customizableEdges17;
         guna2ControlBox1.Size = new Size(35, 30);
         guna2ControlBox1.TabIndex = 18;
         // 
@@ -150,7 +154,7 @@ partial class FormMain
         guna2ImageButton1.Image = (Image)resources.GetObject("guna2ImageButton1.Image");
         guna2ImageButton1.ImageOffset = new Point(0, 0);
         guna2ImageButton1.ImageRotate = 0F;
-        guna2ImageButton1.Location = new Point(587, 6);
+        guna2ImageButton1.Location = new Point(696, 6);
         guna2ImageButton1.Name = "guna2ImageButton1";
         guna2ImageButton1.PressedState.ImageSize = new Size(64, 64);
         guna2ImageButton1.ShadowDecoration.CustomizableEdges = customizableEdges7;
@@ -163,11 +167,12 @@ partial class FormMain
         guna2TabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         guna2TabControl1.Controls.Add(tabPage1);
         guna2TabControl1.Controls.Add(tabPage2);
+        guna2TabControl1.Controls.Add(tabPage3);
         guna2TabControl1.ItemSize = new Size(180, 40);
         guna2TabControl1.Location = new Point(0, 40);
         guna2TabControl1.Name = "guna2TabControl1";
         guna2TabControl1.SelectedIndex = 0;
-        guna2TabControl1.Size = new Size(865, 669);
+        guna2TabControl1.Size = new Size(999, 669);
         guna2TabControl1.TabButtonHoverState.BorderColor = Color.Empty;
         guna2TabControl1.TabButtonHoverState.FillColor = Color.FromArgb(0, 100, 0);
         guna2TabControl1.TabButtonHoverState.Font = new Font("Segoe UI Semibold", 10F);
@@ -198,7 +203,7 @@ partial class FormMain
         tabPage1.Location = new Point(184, 4);
         tabPage1.Name = "tabPage1";
         tabPage1.Padding = new Padding(3);
-        tabPage1.Size = new Size(677, 661);
+        tabPage1.Size = new Size(811, 661);
         tabPage1.TabIndex = 0;
         tabPage1.Text = "Оформление заказа";
         tabPage1.UseVisualStyleBackColor = true;
@@ -214,10 +219,10 @@ partial class FormMain
         _btnRegister.FillColor = Color.Green;
         _btnRegister.Font = new Font("Segoe UI", 9F);
         _btnRegister.ForeColor = Color.White;
-        _btnRegister.Location = new Point(398, 614);
+        _btnRegister.Location = new Point(579, 437);
         _btnRegister.Name = "_btnRegister";
         _btnRegister.ShadowDecoration.CustomizableEdges = customizableEdges2;
-        _btnRegister.Size = new Size(183, 40);
+        _btnRegister.Size = new Size(173, 40);
         _btnRegister.TabIndex = 69;
         _btnRegister.Text = "Отправить";
         _btnRegister.Click += _btnRegister_Click;
@@ -238,7 +243,7 @@ partial class FormMain
         guna2TextBox3.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
         guna2TextBox3.ForeColor = Color.Black;
         guna2TextBox3.HoverState.BorderColor = Color.White;
-        guna2TextBox3.Location = new Point(6, 504);
+        guna2TextBox3.Location = new Point(569, 474);
         guna2TextBox3.Multiline = true;
         guna2TextBox3.Name = "guna2TextBox3";
         guna2TextBox3.PlaceholderText = "";
@@ -246,17 +251,17 @@ partial class FormMain
         guna2TextBox3.SelectedText = "";
         guna2TextBox3.ShadowDecoration.Color = Color.White;
         guna2TextBox3.ShadowDecoration.CustomizableEdges = customizableEdges4;
-        guna2TextBox3.Size = new Size(386, 150);
+        guna2TextBox3.Size = new Size(239, 180);
         guna2TextBox3.TabIndex = 68;
         // 
         // _lblPasswordConfirm
         // 
         _lblPasswordConfirm.BackColor = Color.Transparent;
-        _lblPasswordConfirm.Font = new Font("Segoe UI", 9F);
+        _lblPasswordConfirm.Font = new Font("Segoe UI", 12F);
         _lblPasswordConfirm.ForeColor = Color.Black;
         _lblPasswordConfirm.Location = new Point(6, 7);
         _lblPasswordConfirm.Name = "_lblPasswordConfirm";
-        _lblPasswordConfirm.Size = new Size(261, 17);
+        _lblPasswordConfirm.Size = new Size(336, 23);
         _lblPasswordConfirm.TabIndex = 67;
         _lblPasswordConfirm.Text = "Опишите функционал необходимого проекта:";
         // 
@@ -276,17 +281,18 @@ partial class FormMain
         guna2TextBox2.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
         guna2TextBox2.ForeColor = Color.Black;
         guna2TextBox2.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-        guna2TextBox2.Location = new Point(6, 30);
+        guna2TextBox2.Location = new Point(6, 36);
         guna2TextBox2.Multiline = true;
         guna2TextBox2.Name = "guna2TextBox2";
         guna2TextBox2.PlaceholderText = "Сообщение...";
         guna2TextBox2.SelectedText = "";
         guna2TextBox2.ShadowDecoration.CustomizableEdges = customizableEdges6;
-        guna2TextBox2.Size = new Size(575, 468);
+        guna2TextBox2.Size = new Size(557, 619);
         guna2TextBox2.TabIndex = 66;
         // 
         // tabPage2
         // 
+        tabPage2.Controls.Add(guna2Button1);
         tabPage2.Controls.Add(guna2CircleProgressBar1);
         tabPage2.Controls.Add(guna2TextBox1);
         tabPage2.Controls.Add(flowLayoutPanel1);
@@ -294,7 +300,7 @@ partial class FormMain
         tabPage2.Location = new Point(184, 4);
         tabPage2.Name = "tabPage2";
         tabPage2.Padding = new Padding(3);
-        tabPage2.Size = new Size(677, 661);
+        tabPage2.Size = new Size(811, 661);
         tabPage2.TabIndex = 1;
         tabPage2.Text = "Мои заказы";
         tabPage2.UseVisualStyleBackColor = true;
@@ -306,7 +312,7 @@ partial class FormMain
         guna2CircleProgressBar1.FillThickness = 10;
         guna2CircleProgressBar1.Font = new Font("Segoe UI", 12F);
         guna2CircleProgressBar1.ForeColor = Color.White;
-        guna2CircleProgressBar1.Location = new Point(6, 9);
+        guna2CircleProgressBar1.Location = new Point(73, 9);
         guna2CircleProgressBar1.Minimum = 0;
         guna2CircleProgressBar1.Name = "guna2CircleProgressBar1";
         guna2CircleProgressBar1.ProgressBrushMode = Guna.UI2.WinForms.Enums.BrushMode.Solid;
@@ -314,7 +320,7 @@ partial class FormMain
         guna2CircleProgressBar1.ProgressColor2 = Color.Green;
         guna2CircleProgressBar1.ProgressStartCap = System.Drawing.Drawing2D.LineCap.Triangle;
         guna2CircleProgressBar1.ProgressThickness = 10;
-        guna2CircleProgressBar1.ShadowDecoration.CustomizableEdges = customizableEdges8;
+        guna2CircleProgressBar1.ShadowDecoration.CustomizableEdges = customizableEdges10;
         guna2CircleProgressBar1.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
         guna2CircleProgressBar1.Size = new Size(59, 59);
         guna2CircleProgressBar1.TabIndex = 4;
@@ -326,7 +332,7 @@ partial class FormMain
         // 
         guna2TextBox1.BorderRadius = 12;
         guna2TextBox1.Cursor = Cursors.IBeam;
-        guna2TextBox1.CustomizableEdges = customizableEdges9;
+        guna2TextBox1.CustomizableEdges = customizableEdges11;
         guna2TextBox1.DefaultText = "";
         guna2TextBox1.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
         guna2TextBox1.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -341,7 +347,7 @@ partial class FormMain
         guna2TextBox1.Name = "guna2TextBox1";
         guna2TextBox1.PlaceholderText = "Поиск";
         guna2TextBox1.SelectedText = "";
-        guna2TextBox1.ShadowDecoration.CustomizableEdges = customizableEdges10;
+        guna2TextBox1.ShadowDecoration.CustomizableEdges = customizableEdges12;
         guna2TextBox1.Size = new Size(259, 38);
         guna2TextBox1.TabIndex = 3;
         guna2TextBox1.TextChanged += guna2TextBox1_TextChanged;
@@ -353,7 +359,7 @@ partial class FormMain
         flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
         flowLayoutPanel1.Location = new Point(0, 75);
         flowLayoutPanel1.Name = "flowLayoutPanel1";
-        flowLayoutPanel1.Size = new Size(675, 579);
+        flowLayoutPanel1.Size = new Size(800, 580);
         flowLayoutPanel1.TabIndex = 2;
         flowLayoutPanel1.WrapContents = false;
         // 
@@ -365,19 +371,49 @@ partial class FormMain
         guna2ImageButton2.Image = (Image)resources.GetObject("guna2ImageButton2.Image");
         guna2ImageButton2.ImageOffset = new Point(0, 0);
         guna2ImageButton2.ImageRotate = 0F;
-        guna2ImageButton2.Location = new Point(587, 6);
+        guna2ImageButton2.Location = new Point(721, 6);
         guna2ImageButton2.Name = "guna2ImageButton2";
         guna2ImageButton2.PressedState.ImageSize = new Size(64, 64);
-        guna2ImageButton2.ShadowDecoration.CustomizableEdges = customizableEdges11;
+        guna2ImageButton2.ShadowDecoration.CustomizableEdges = customizableEdges13;
         guna2ImageButton2.Size = new Size(84, 65);
         guna2ImageButton2.TabIndex = 1;
+        // 
+        // tabPage3
+        // 
+        tabPage3.Location = new Point(184, 4);
+        tabPage3.Name = "tabPage3";
+        tabPage3.Padding = new Padding(3);
+        tabPage3.Size = new Size(811, 661);
+        tabPage3.TabIndex = 2;
+        tabPage3.Text = "Задачи";
+        tabPage3.UseVisualStyleBackColor = true;
+        // 
+        // guna2Button1
+        // 
+        guna2Button1.BorderRadius = 5;
+        guna2Button1.CustomizableEdges = customizableEdges8;
+        guna2Button1.DisabledState.BorderColor = Color.DarkGray;
+        guna2Button1.DisabledState.CustomBorderColor = Color.DarkGray;
+        guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+        guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+        guna2Button1.FillColor = Color.Green;
+        guna2Button1.Font = new Font("Segoe UI", 9F);
+        guna2Button1.ForeColor = Color.White;
+        guna2Button1.Location = new Point(542, 19);
+        guna2Button1.Name = "guna2Button1";
+        guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges9;
+        guna2Button1.Size = new Size(173, 40);
+        guna2Button1.TabIndex = 70;
+        guna2Button1.Text = "Обновить список задач";
+        guna2Button1.Visible = false;
+        guna2Button1.Click += guna2Button1_Click;
         // 
         // FormMain
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = Color.White;
-        ClientSize = new Size(865, 710);
+        ClientSize = new Size(1002, 710);
         Controls.Add(guna2TabControl1);
         Controls.Add(panel2);
         FormBorderStyle = FormBorderStyle.None;
@@ -417,5 +453,7 @@ partial class FormMain
     private Guna.UI2.WinForms.Guna2HtmlLabel _lblPasswordConfirm;
     private Guna.UI2.WinForms.Guna2TextBox guna2TextBox3;
     private Guna.UI2.WinForms.Guna2Button _btnRegister;
+    private TabPage tabPage3;
+    private Guna.UI2.WinForms.Guna2Button guna2Button1;
 }
 

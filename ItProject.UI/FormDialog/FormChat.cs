@@ -1,24 +1,32 @@
+using Guna.UI2.WinForms;
 using ItProject.UI.Client;
 using ItProject.UI.customElement;
 using ItProject.UI.Domain.Interface;
-using ItProject.UI.Domain.Models;
 using ItProject.UI.StaticModel;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace ItProject.UI.FormDialog;
 
 public partial class FormChat : Form
 {
     private readonly IClientRepository _repository;
+    private readonly IWorkerRepository _repository2;
+    private readonly SendToBack _sendToBack;
     private int OrderId;
+    private string Alias;
 
-    public FormChat(IClientRepository repository, int idOrder)
+    public FormChat(IClientRepository repository, string alias, int idOrder, IWorkerRepository repository2, SendToBack sendToBack)
     {
         InitializeComponent();
         _repository = repository;
+        _repository2 = repository2;
+        _sendToBack = sendToBack;
         OrderId = idOrder;
-        label3.Text = $"Чат по заказу: {idOrder}";
+        Alias = alias;
+        label3.Text = $"Чат по заказу: {alias}-{idOrder}";
+        if (CurrentUser.Position.Count() == 0)
+            guna2Button1.Visible = false;
+
         UpdateListMessageAsync();
     }
 
@@ -26,17 +34,24 @@ public partial class FormChat : Form
     {
         flowLayoutPanel1.Controls.Clear();
 
-        var message = await _repository.GetListMessageClientAsync(OrderId);
+        var message = new List<MessageFromOrder>();
+
+        if (CurrentUser.Position.Count() == 0)
+            message = await _repository.GetListMessageClientAsync(OrderId);
+        else
+            message = await _repository2.GetListMessageWorkerAsync(OrderId);
 
         foreach (var item in message)
         {
             var element = new CustomMessage(item);
 
             if (!element.MessageInfo.IsVisible)
-                element.UpdateInfoOrderAsync(_repository);
+                element.UpdateInfoOrderAsync(_repository, _repository2);
 
             flowLayoutPanel1.Controls.Add(element);
         }
+
+        flowLayoutPanel1.VerticalScroll.Value = flowLayoutPanel1.VerticalScroll.Minimum;
     }
 
     private bool ValidateFields()
@@ -60,7 +75,11 @@ public partial class FormChat : Form
                 return;
             }
 
-            await _repository.SendMessageAsync(CurrentUser.Id, OrderId, _Message.Text);
+            if (CurrentUser.Position.Count() == 0)
+                await _repository.SendMessageAsync(CurrentUser.Id, OrderId, _Message.Text);
+            else
+                await _repository2.SendMessageAsync(CurrentUser.Id, OrderId, _Message.Text);
+
             _Message.Text = "";
             UpdateListMessageAsync();
         }
@@ -86,4 +105,17 @@ public partial class FormChat : Form
             this.DialogResult = DialogResult.Cancel;
         }
     }
-} 
+
+    private async void guna2Button1_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            this.Close();
+            await _sendToBack.CloseTicket(Alias, OrderId);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+}

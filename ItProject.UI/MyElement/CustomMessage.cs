@@ -1,6 +1,9 @@
 ﻿using Guna.UI2.WinForms;
 using ItProject.UI.Domain.Interface;
+using ItProject.UI.Domain.Models;
+using ItProject.UI.StaticModel;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace ItProject.UI.customElement;
 
@@ -117,13 +120,19 @@ public class CustomMessage : Guna2Panel
         this.Controls.Add(DateSendLabel);
     }
 
-    public async Task UpdateInfoOrderAsync(IClientRepository repository)
+    public async Task UpdateInfoOrderAsync(IClientRepository repository, IWorkerRepository repository1)
     {
         while (true)
         {
             await Task.Delay(5000);
 
-            var result = await repository.GetMessageClientAsync(MessageInfo.IdMessage);
+            var result = new MessageFromOrder();
+
+            if (CurrentUser.Position.Count() == 0)
+                result = await repository.GetMessageClientAsync(MessageInfo.IdMessage);
+            else
+                result = await repository1.GetMessageWorkerAsync(MessageInfo.IdMessage);
+
             UpdateInfoOrderPanel(result);
         }
     }

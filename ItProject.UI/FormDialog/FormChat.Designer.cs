@@ -26,6 +26,8 @@ partial class FormChat
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+        Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChat));
@@ -39,6 +41,7 @@ partial class FormChat
         guna2BorderlessForm1 = new Guna2BorderlessForm(components);
         _Message = new Guna2TextBox();
         flowLayoutPanel1 = new FlowLayoutPanel();
+        guna2Button1 = new Guna2Button();
         panel2.SuspendLayout();
         SuspendLayout();
         // 
@@ -161,7 +164,7 @@ partial class FormChat
         _Message.AutoScroll = true;
         _Message.BorderRadius = 12;
         _Message.Cursor = Cursors.IBeam;
-        _Message.CustomizableEdges = customizableEdges9;
+        _Message.CustomizableEdges = customizableEdges11;
         _Message.DefaultText = "";
         _Message.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
         _Message.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -177,7 +180,7 @@ partial class FormChat
         _Message.PlaceholderText = "Сообщение...";
         _Message.ScrollBars = ScrollBars.Vertical;
         _Message.SelectedText = "";
-        _Message.ShadowDecoration.CustomizableEdges = customizableEdges10;
+        _Message.ShadowDecoration.CustomizableEdges = customizableEdges12;
         _Message.Size = new Size(345, 74);
         _Message.TabIndex = 63;
         // 
@@ -192,6 +195,26 @@ partial class FormChat
         flowLayoutPanel1.TabIndex = 64;
         flowLayoutPanel1.WrapContents = false;
         // 
+        // guna2Button1
+        // 
+        guna2Button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        guna2Button1.BorderRadius = 5;
+        guna2Button1.CustomizableEdges = customizableEdges9;
+        guna2Button1.DisabledState.BorderColor = Color.DarkGray;
+        guna2Button1.DisabledState.CustomBorderColor = Color.DarkGray;
+        guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+        guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+        guna2Button1.FillColor = Color.Green;
+        guna2Button1.Font = new Font("Segoe UI", 9F);
+        guna2Button1.ForeColor = Color.White;
+        guna2Button1.Location = new Point(12, 548);
+        guna2Button1.Name = "guna2Button1";
+        guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges10;
+        guna2Button1.Size = new Size(145, 40);
+        guna2Button1.TabIndex = 65;
+        guna2Button1.Text = "Закрыть обращение";
+        guna2Button1.Click += guna2Button1_Click;
+        // 
         // FormChat
         // 
         AllowDrop = true;
@@ -199,6 +222,7 @@ partial class FormChat
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = Color.White;
         ClientSize = new Size(520, 600);
+        Controls.Add(guna2Button1);
         Controls.Add(flowLayoutPanel1);
         Controls.Add(_Message);
         Controls.Add(panel2);
@@ -226,4 +250,5 @@ partial class FormChat
     private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
     private Guna2TextBox _Message;
     private FlowLayoutPanel flowLayoutPanel1;
+    private Guna2Button guna2Button1;
 } 

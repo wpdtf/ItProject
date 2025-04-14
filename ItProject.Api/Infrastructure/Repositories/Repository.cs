@@ -50,4 +50,20 @@ public class Repository(DataBaseContext dbContext) : IRepository
 
         await connection.ExecuteAsync(sql);
     }
+
+    /// <inheritdoc/>
+    public async Task<CloseTicket> CloseTicketAsync(int idOrder)
+    {
+        var sql = @$"exec dbo.ЗакрытьОбращение @Ид = {idOrder}";
+        var result = await connection.QueryFirstOrDefaultAsync<CloseTicket>(sql);
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task<CloseTicket> GetInfoSendEmailAsync(int idOrder)
+    {
+        var sql = @$"exec dbo.ПолучитьИнформациюДляПочты @Ид = {idOrder}";
+        var result = await connection.QueryFirstOrDefaultAsync<CloseTicket>(sql);
+        return result;
+    }
 }

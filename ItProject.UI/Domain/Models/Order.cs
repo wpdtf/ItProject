@@ -16,6 +16,11 @@ public class Order
     public string Description { get; set; }
 
     /// <summary>
+    /// Описание сотрудника
+    /// </summary>
+    public string DescriptionWorker { get; set; }
+
+    /// <summary>
     /// Статус заказа
     /// </summary>
     public string Status { get; set; }

@@ -40,4 +40,10 @@ public interface IRepository
     /// <param name="passwordHash">На какой пароль</param>
     /// <returns></returns>
     Task UpdatePasswordAsync(string login, string passwordHash);
+
+    /// <summary>
+    /// Закрыть обращение
+    /// </summary>
+    /// <param name="idOrder">По какому заказу</param>
+    Task<CloseTicket> CloseTicketAsync(int idOrder);
 } 

@@ -98,4 +98,16 @@ public class SendToBack
 
         throw new Exception("Что-то пошло не так!");
     }
+
+    public async Task CloseTicket(string alias, int orderId)
+    {
+        var response = await _httpClient.PostAsync($"CloseTicket?alias={alias}&orderId={orderId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        throw new Exception("Что-то пошло не так!");
+    }
 }

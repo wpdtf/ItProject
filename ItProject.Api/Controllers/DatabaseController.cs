@@ -84,4 +84,73 @@ public class DatabaseController(IRepository repository, IEmailService service) :
         await _repository.UpdatePasswordAsync(authDTO.Login, authDTO.Password);
         return NoContent();
     }
+
+    /// <summary>
+    /// Закрыть обращение
+    /// </summary>
+    /// <param name="alias">приписка номера заказа</param>
+    /// <param name="orderId">номер заказа</param>
+    /// <returns>Клиент</returns>
+    /// <response code="200">Успешная отправка</response>
+    [HttpPost("CloseTicket")]
+    public async Task<ActionResult<AuthResult>> CloseTicketAsync([FromQuery] string alias, int orderId)
+    {
+        var lastMessage = await _repository.CloseTicketAsync(orderId);
+
+        await _service.CloseTicketAsync(lastMessage.Email, lastMessage.Name, $"{alias}-{orderId}", lastMessage.LastMessage);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Согласовать цену
+    /// </summary>
+    /// <param name="alias">приписка номера заказа</param>
+    /// <param name="orderId">номер заказа</param>
+    /// <param name="price">номер заказа</param>
+    /// <returns>Клиент</returns>
+    /// <response code="200">Успешная отправка</response>
+    [HttpPost("Agreement")]
+    public async Task<ActionResult<AuthResult>> AgreementAsync([FromQuery] string alias, int orderId, decimal price)
+    {
+        var info = await _repository.CloseTicketAsync(orderId);
+
+        await _service.SetAgreementOrderAsync(info.Email, info.Name, $"{alias}-{orderId}", price);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Уведомить о приемке
+    /// </summary>
+    /// <param name="alias">приписка номера заказа</param>
+    /// <param name="orderId">номер заказа</param>
+    /// <returns>Клиент</returns>
+    /// <response code="200">Успешная отправка</response>
+    [HttpPost("Acceptance")]
+    public async Task<ActionResult<AuthResult>> SetAcceptanceAsync([FromQuery] string alias, int orderId)
+    {
+        var info = await _repository.CloseTicketAsync(orderId);
+
+        await _service.SetAcceptanceOrderAsync(info.Email, info.Name, $"{alias}-{orderId}");
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Просьба оценить
+    /// </summary>
+    /// <param name="alias">приписка номера заказа</param>
+    /// <param name="orderId">номер заказа</param>
+    /// <returns>Клиент</returns>
+    /// <response code="200">Успешная отправка</response>
+    [HttpPost("Success")]
+    public async Task<ActionResult<AuthResult>> SetSuccessAsync([FromQuery] string alias, int orderId)
+    {
+        var info = await _repository.CloseTicketAsync(orderId);
+
+        await _service.SetSuccessAsync(info.Email, info.Name, $"{alias}-{orderId}");
+
+        return NoContent();
+    }
 }

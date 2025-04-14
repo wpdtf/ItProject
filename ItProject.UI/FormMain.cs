@@ -1,31 +1,38 @@
+using Guna.UI2.WinForms;
 using ItProject.UI.Client;
 using ItProject.UI.customElement;
 using ItProject.UI.Domain.Interface;
+using ItProject.UI.Domain.Models;
 using ItProject.UI.FormDialog;
+using ItProject.UI.Infrastructure.Repositories;
 using ItProject.UI.StaticModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace ItProject.UI;
 
 public partial class FormMain : Form
 {
     private readonly IClientRepository _repository;
+    private readonly IWorkerRepository _repository2;
     private readonly SendToBack _sendToBack;
 
     private List<Order> orders;
 
-    public FormMain(SendToBack sendToBack, IClientRepository repository)
+    public FormMain(SendToBack sendToBack, IClientRepository repository, IWorkerRepository repository2)
     {
         InitializeComponent();
         _repository = repository;
         _sendToBack = sendToBack;
+        _repository2 = repository2;
     }
 
     private async void FormMain_Load(object sender, EventArgs e)
     {
-        CurrentUser.Id = 2;
+        CurrentUser.Id = 1;
+        CurrentUser.Position = "Балбес";
 
         SetAccess(CurrentUser.Position);
     }
@@ -34,7 +41,8 @@ public partial class FormMain : Form
     {
         switch (role.ToLower())
         {
-            case "менеджер по продажам":
+            case "балбес":
+                guna2TabControl1.TabPages.Remove(tabPage1);
                 break;
             case "старший менеджер":
                 break;
@@ -62,8 +70,7 @@ public partial class FormMain : Form
                 guna2CircleProgressBar1.Visible = true;
                 guna2CircleProgressBar1.Animated = true;
 
-                orders = await _repository.GetListOrderClientAsync(CurrentUser.Id);
-                await UpdateClientOrder(orders);
+                await UpdateListLocalOrder();
 
                 guna2TextBox1.Visible = true;
                 guna2CircleProgressBar1.Visible = false;
@@ -84,7 +91,11 @@ public partial class FormMain : Form
         {
             var element = new CustomOrder(item);
 
-            element.UpdateInfoOrderAsync(_repository);
+            element.UpdateInfoOrderAsync(_repository, _repository2);
+
+            element._IWorkerRepository = _repository2;
+
+            element._mainForm = this;
 
             element.Button.Click += async (s, e) =>
             {
@@ -93,19 +104,78 @@ public partial class FormMain : Form
                     var result = await _repository.SetNextStatusOrderAsync(element.OrderInfo.Id);
                     element.UpdateInfoOrderPanel(result);
                 }
-                else
+                else if (item.Status is "Готов" or "Уточнение деталей")
                 {
                     if (item.Status == "Готов")
                     {
                         var newStatus = await _repository.CreateNewMessageStatusAsync(element.OrderInfo.Id);
                         element.UpdateInfoOrderPanel(newStatus);
+                        await UpdateLocalOrder(newStatus);
                     }
 
-                    FormChat form = new(_repository, element.OrderInfo.Id);
+                    FormChat form = new(_repository, element.alias, element.OrderInfo.Id, _repository2, _sendToBack);
                     form.Show();
 
-                    var result = await _repository.GetOrderClientAsync(element.OrderInfo.Id);
+                    var result = new Order();
+
+                    if (CurrentUser.Position.Count() == 0)
+                        result = await _repository.GetOrderClientAsync(element.OrderInfo.Id);
+                    else
+                        result = await _repository2.GetOrderWorkerAsync(element.OrderInfo.Id);
+
+                    await UpdateLocalOrder(result);
+
                     element.UpdateInfoOrderPanel(result);
+                }
+                else if (item.Status is "Новый" or "Проверка" or "Оценка" or "Разработка" or "Запуск")
+                {
+                    var typeMessage = 0;
+                    var question = new DialogResult();
+
+                    switch (item.Status)
+                    {
+                        case "Новый":
+                            if (!item.IsMp && !item.IsWin && !item.IsSite)
+                            {
+                                MessageBox.Show("Заполните направления разработки!", "Уведомления", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                return;
+                            }
+                            break;
+                        case "Проверка":
+                            if (item.DescriptionWorker.Trim().Count() == 0)
+                            {
+                                MessageBox.Show("Заполните описание сотрудника, необходимо для конечной оценки!", "Уведомления", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                return;
+                            }
+                            break;
+                        case "Оценка":
+                            question = MessageBox.Show($"Отправить на согласование клиенту проект с итоговой ценой {item.Price}?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                            if (question == DialogResult.No)
+                                return;
+
+                            typeMessage = 1;
+                            break;
+                        case "Разработка":
+                            question = MessageBox.Show($"Вы подтверждаете готовность проекта и его отправку на приемку клиенту?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                            if (question == DialogResult.No)
+                                return;
+
+                            typeMessage = 2;
+                            break;
+                        case "Запуск":
+                            question = MessageBox.Show($"Вы подтверждаете запуск проекта и закрытие заказа?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                            if (question == DialogResult.No)
+                                return;
+
+                            typeMessage = 3;
+                            break;
+                    }
+
+                    await _repository2.SetNextStatusOrderAsync(item.Id);
+                    await UpdateListLocalOrder();
                 }
             };
 
@@ -113,13 +183,13 @@ public partial class FormMain : Form
         }
     }
 
-    private void guna2TextBox1_TextChanged(object sender, EventArgs e)
+    private async void guna2TextBox1_TextChanged(object sender, EventArgs e)
     {
         string searchText = guna2TextBox1.Text.Trim().ToUpper();
 
         if (string.IsNullOrEmpty(searchText))
         {
-            UpdateClientOrder(orders);
+            await UpdateListLocalOrder();
             return;
         }
 
@@ -238,5 +308,39 @@ public partial class FormMain : Form
         {
             MessageBox.Show("Не удалось создать задание!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+    }
+
+    public async Task UpdateLocalOrder(Order order)
+    {
+        var itemToUpdate = orders.FirstOrDefault(x => x.Id == order.Id);
+
+        if (itemToUpdate is not null)
+        {
+            var index = orders.IndexOf(itemToUpdate);
+            orders[index] = order;
+        }
+    }
+
+
+    public async Task UpdateListLocalOrder()
+    {
+        if (CurrentUser.Position.Count() > 0)
+        {
+            guna2Button1.Visible = true;
+            tabPage2.Text = "Мои задачи";
+            orders = await _repository2.GetListOrderWorkerAsync(CurrentUser.Id);
+        }
+        else
+        {
+            orders = await _repository.GetListOrderClientAsync(CurrentUser.Id);
+
+        }
+
+        await UpdateClientOrder(orders);
+    }
+
+    private async void guna2Button1_Click(object sender, EventArgs e)
+    {
+        await UpdateListLocalOrder();
     }
 }
