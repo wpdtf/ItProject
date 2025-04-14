@@ -31,8 +31,8 @@ public partial class FormMain : Form
 
     private async void FormMain_Load(object sender, EventArgs e)
     {
-        CurrentUser.Id = 1;
-        CurrentUser.Position = "Балбес";
+        CurrentUser.Id = 2;
+        CurrentUser.Position = "Менеджер";
 
         SetAccess(CurrentUser.Position);
     }
@@ -41,14 +41,17 @@ public partial class FormMain : Form
     {
         switch (role.ToLower())
         {
-            case "балбес":
+            case "разработчик по":
                 guna2TabControl1.TabPages.Remove(tabPage1);
                 break;
-            case "старший менеджер":
+            case "менеджер":
+                guna2TabControl1.TabPages.Remove(tabPage1);
                 break;
-            case "админ":
+            case "разработчик мп":
+                guna2TabControl1.TabPages.Remove(tabPage1);
                 break;
-            case "":
+            case "верстальщик":
+                guna2TabControl1.TabPages.Remove(tabPage1);
                 break;
         }
     }
@@ -89,11 +92,9 @@ public partial class FormMain : Form
 
         foreach (var item in localOrders)
         {
-            var element = new CustomOrder(item);
+            var element = new CustomOrder(item, _repository2);
 
             element.UpdateInfoOrderAsync(_repository, _repository2);
-
-            element._IWorkerRepository = _repository2;
 
             element._mainForm = this;
 

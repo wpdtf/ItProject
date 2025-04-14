@@ -60,4 +60,37 @@ public class WorkerRepository(DataBaseContext dbContext) : IWorkerRepository
         var result = (await connection.QueryAsync<Order>(sql)).First();
         return result;
     }
+
+    /// <inheritdoc/>
+    public async Task<Order> UpdateDirectionMPAsync(int orderId, bool why)
+    {
+        var sql = @$"exec dbo.ОбновитьНаправлениеМП @Ид = {orderId}, @why = {why}";
+        var result = (await connection.QueryAsync<Order>(sql)).First();
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Order> UpdateDirectionPCAsync(int orderId, bool why)
+    {
+        var sql = @$"exec dbo.ОбновитьНаправлениеПК @Ид = {orderId}, @why = {why}";
+        var result = (await connection.QueryAsync<Order>(sql)).First();
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Order> UpdateDirectionSiteAsync(int orderId, bool why)
+    {
+        var sql = @$"exec dbo.ОбновитьНаправлениеСайт @Ид = {orderId}, @why = {why}";
+        var result = (await connection.QueryAsync<Order>(sql)).First();
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Order> SetNewPriceAsync(int orderId, decimal price)
+    {
+        var sql = "exec dbo.ОбновитьЦенуЗаказа @Ид, @Цена";
+        var parameters = new { Ид = orderId, Цена = price };
+        var result = (await connection.QueryAsync<Order>(sql, parameters)).First();
+        return result;
+    }
 }

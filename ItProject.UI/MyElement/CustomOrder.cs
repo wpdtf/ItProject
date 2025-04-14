@@ -1,8 +1,11 @@
 ﻿using Guna.UI2.WinForms;
 using ItProject.UI.Domain.Interface;
 using ItProject.UI.Domain.Models;
+using ItProject.UI.Infrastructure.Repositories;
 using ItProject.UI.StaticModel;
 using System.ComponentModel;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace ItProject.UI.customElement;
 
@@ -12,6 +15,7 @@ public class CustomOrder : Guna2Panel
 
     private bool _isBlinking = false;
     private bool _isScore = false;
+    private bool _isLoad = false;
     private int _tryLeave = 0;
     private IWorkerRepository workerRepository1;
     private FormMain mainForm;
@@ -33,6 +37,12 @@ public class CustomOrder : Guna2Panel
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public Guna2HtmlLabel DescriptionLabelWorker { get; private set; }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    public Guna2HtmlLabel PriceLabel { get; private set; }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    public Guna2TextBox PriceText { get; private set; }
 
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -112,9 +122,11 @@ public class CustomOrder : Guna2Panel
         InitializeComponent();
     }
 
-    public CustomOrder(Order order) : this()
+    public CustomOrder(Order order, IWorkerRepository workerRepository) : this()
     {
+        _IWorkerRepository = workerRepository;
         UpdateInfoOrderPanel(order);
+        _isLoad = true;
     }
 
     public void UpdateInfoOrderPanel(Order order)
@@ -132,6 +144,9 @@ public class CustomOrder : Guna2Panel
 
         LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate} на {order.Price} руб.";
 
+        PriceLabel.Visible = false;
+        PriceText.Visible = false;
+
         Button.Text = order.Status == "Согласование" ? "Согласовать" :
                       order.Status == "Приемка" ? "Принять" :
                       order.Status == "Готов" ? "Создать обр." :
@@ -139,8 +154,14 @@ public class CustomOrder : Guna2Panel
 
         if (CurrentUser.Position.Count() > 0)
         {
+            LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate}. Тел. {order.Phone}.";
+
             if (order.Score > 0)
-                LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate} на {order.Price} руб. Оценен клиентом на: {order.Score} балл";
+                LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate}. Тел. {order.Phone}. Оценен клиентом на: {order.Score} балл";
+
+            PriceLabel.Visible = true;
+            PriceText.Visible = true;
+            PriceText.Text = order.Price.ToString();
 
             DescriptionTextWorker.Visible = true;
             DescriptionTextWorker.Text = order.DescriptionWorker;
@@ -188,13 +209,13 @@ public class CustomOrder : Guna2Panel
         this.BorderRadius = 10;
         this.BorderThickness = 2;
         this.Location = new Point(3, 3);
-        this.Size = new Size(775, 300);
+        this.Size = new Size(775, 340);
 
         DescriptionLabel = new Guna2HtmlLabel();
         DescriptionLabel.BackColor = Color.Transparent;
         DescriptionLabel.Font = new Font("Segoe UI", 9F);
         DescriptionLabel.ForeColor = Color.Black;
-        DescriptionLabel.Location = new Point(10, 30);
+        DescriptionLabel.Location = new Point(10, 70);
         DescriptionLabel.Size = new Size(61, 17);
         DescriptionLabel.Text = "Описание:";
 
@@ -202,7 +223,7 @@ public class CustomOrder : Guna2Panel
         LabelInfo.BackColor = Color.Transparent;
         LabelInfo.Font = new Font("Segoe UI", 9F);
         LabelInfo.ForeColor = Color.Black;
-        LabelInfo.Location = new Point(10, 9);
+        LabelInfo.Location = new Point(10, 19);
         LabelInfo.Size = new Size(228, 17);
 
         DescriptionText = new Guna2TextBox();
@@ -216,7 +237,7 @@ public class CustomOrder : Guna2Panel
         DescriptionText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
         DescriptionText.ForeColor = Color.Black;
         DescriptionText.HoverState.BorderColor = Color.Green;
-        DescriptionText.Location = new Point(10, 50);
+        DescriptionText.Location = new Point(10, 90);
         DescriptionText.Multiline = true;
         DescriptionText.ReadOnly = true;
         DescriptionText.AutoScroll = true;
@@ -228,7 +249,7 @@ public class CustomOrder : Guna2Panel
         DescriptionLabelWorker.BackColor = Color.Transparent;
         DescriptionLabelWorker.Font = new Font("Segoe UI", 9F);
         DescriptionLabelWorker.ForeColor = Color.Black;
-        DescriptionLabelWorker.Location = new Point(370, 30);
+        DescriptionLabelWorker.Location = new Point(370, 70);
         DescriptionLabelWorker.Size = new Size(61, 17);
         DescriptionLabelWorker.Text = "Описание от сотрудника:";
         DescriptionLabelWorker.Visible = false;
@@ -244,7 +265,7 @@ public class CustomOrder : Guna2Panel
         DescriptionTextWorker.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
         DescriptionTextWorker.ForeColor = Color.Black;
         DescriptionTextWorker.HoverState.BorderColor = Color.Green;
-        DescriptionTextWorker.Location = new Point(370, 50);
+        DescriptionTextWorker.Location = new Point(370, 90);
         DescriptionTextWorker.Multiline = true;
         DescriptionTextWorker.AutoScroll = true;
         DescriptionTextWorker.ScrollBars = ScrollBars.Vertical;
@@ -252,6 +273,32 @@ public class CustomOrder : Guna2Panel
         DescriptionTextWorker.Size = new Size(350, 180);
         DescriptionTextWorker.Visible = false;
         DescriptionTextWorker.Leave += LeaveAsync;
+
+        PriceLabel = new Guna2HtmlLabel();
+        PriceLabel.BackColor = Color.Transparent;
+        PriceLabel.Font = new Font("Segoe UI", 9F);
+        PriceLabel.ForeColor = Color.Black;
+        PriceLabel.Location = new Point(10, 45);
+        PriceLabel.Size = new Size(50, 17);
+        PriceLabel.Text = "Цена:";
+
+        PriceText = new Guna2TextBox();
+        PriceText.Name = "PriceText";
+        PriceText.BorderRadius = 12;
+        PriceText.Cursor = Cursors.IBeam;
+        PriceText.DisabledState.BorderColor = Color.Green;
+        PriceText.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+        PriceText.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+        PriceText.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+        PriceText.FocusedState.BorderColor = Color.Green;
+        PriceText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+        PriceText.ForeColor = Color.Black;
+        PriceText.HoverState.BorderColor = Color.Green;
+        PriceText.Location = new Point(60, 40);
+        PriceText.SelectedText = "";
+        PriceText.Size = new Size(110, 25);
+        PriceText.Visible = false;
+        PriceText.Leave += LeaveAsync;
 
         Button = new Guna2Button();
         Button.Animated = true;
@@ -265,7 +312,7 @@ public class CustomOrder : Guna2Panel
         Button.FillColor = Color.Green;
         Button.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
         Button.ForeColor = Color.White;
-        Button.Location = new Point(630, 240);
+        Button.Location = new Point(630, 280);
         Button.Margin = new Padding(4);
         Button.Size = new Size(130, 40);
 
@@ -275,7 +322,7 @@ public class CustomOrder : Guna2Panel
         IsMPCheck.CheckedState.BorderRadius = 0;
         IsMPCheck.CheckedState.BorderThickness = 0;
         IsMPCheck.CheckedState.FillColor = Color.Green;
-        IsMPCheck.Location = new Point(515, 10);
+        IsMPCheck.Location = new Point(550, 20);
         IsMPCheck.Size = new Size(46, 19);
         IsMPCheck.Text = "МП";
         IsMPCheck.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
@@ -290,7 +337,7 @@ public class CustomOrder : Guna2Panel
         IsSiteCheck.CheckedState.BorderRadius = 0;
         IsSiteCheck.CheckedState.BorderThickness = 0;
         IsSiteCheck.CheckedState.FillColor = Color.Green;
-        IsSiteCheck.Location = new Point(567, 10);
+        IsSiteCheck.Location = new Point(602, 20);
         IsSiteCheck.Size = new Size(52, 19);
         IsSiteCheck.Text = "Сайт";
         IsSiteCheck.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
@@ -305,7 +352,7 @@ public class CustomOrder : Guna2Panel
         IsWinCheck.CheckedState.BorderRadius = 0;
         IsWinCheck.CheckedState.BorderThickness = 0;
         IsWinCheck.CheckedState.FillColor = Color.Green;
-        IsWinCheck.Location = new Point(625, 10);
+        IsWinCheck.Location = new Point(660, 20);
         IsWinCheck.Size = new Size(71, 19);
         IsWinCheck.Text = "Десктоп";
         IsWinCheck.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
@@ -316,7 +363,7 @@ public class CustomOrder : Guna2Panel
 
         ProgressBar = new Guna2ProgressBar();
         ProgressBar.BorderRadius = 5;
-        ProgressBar.Location = new Point(10, 240);
+        ProgressBar.Location = new Point(10, 280);
         ProgressBar.ProgressColor = Color.Green;
         ProgressBar.ProgressColor2 = Color.Green;
         ProgressBar.Size = new Size(600, 15);
@@ -328,7 +375,7 @@ public class CustomOrder : Guna2Panel
         Status1.CheckedState.BorderRadius = 0;
         Status1.CheckedState.BorderThickness = 0;
         Status1.CheckedState.FillColor = Color.Green;
-        Status1.Location = new Point(10, 260);
+        Status1.Location = new Point(10, 300);
         Status1.Size = new Size(134, 19);
         Status1.Text = "Анализ требований";
         Status1.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
@@ -344,14 +391,14 @@ public class CustomOrder : Guna2Panel
         Status2.CheckedState.BorderRadius = 0;
         Status2.CheckedState.BorderThickness = 0;
         Status2.CheckedState.FillColor = Color.Green;
-        Status2.Location = new Point(150, 260);
+        Status2.Location = new Point(150, 300);
         Status2.Size = new Size(136, 19);
         Status2.Text = "Согласование цены";
         Status2.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
         Status2.UncheckedState.BorderRadius = 0;
         Status2.UncheckedState.BorderThickness = 0;
         Status2.UncheckedState.FillColor = Color.FromArgb(0, 64, 0);
-        Status1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+        Status2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
         Status2.CheckedChanged += ReadOnly;
 
         Status3 = new Guna2CheckBox();
@@ -360,14 +407,14 @@ public class CustomOrder : Guna2Panel
         Status3.CheckedState.BorderRadius = 0;
         Status3.CheckedState.BorderThickness = 0;
         Status3.CheckedState.FillColor = Color.Green;
-        Status3.Location = new Point(310, 260);
+        Status3.Location = new Point(310, 300);
         Status3.Size = new Size(88, 19);
         Status3.Text = "Разработка";
         Status3.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
         Status3.UncheckedState.BorderRadius = 0;
         Status3.UncheckedState.BorderThickness = 0;
         Status3.UncheckedState.FillColor = Color.FromArgb(0, 64, 0);
-        Status1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+        Status3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
         Status3.CheckedChanged += ReadOnly;
 
         Status4 = new Guna2CheckBox();
@@ -376,14 +423,14 @@ public class CustomOrder : Guna2Panel
         Status4.CheckedState.BorderRadius = 0;
         Status4.CheckedState.BorderThickness = 0;
         Status4.CheckedState.FillColor = Color.Green;
-        Status4.Location = new Point(460, 260);
+        Status4.Location = new Point(460, 300);
         Status4.Size = new Size(76, 19);
         Status4.Text = "Приемка";
         Status4.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
         Status4.UncheckedState.BorderRadius = 0;
         Status4.UncheckedState.BorderThickness = 0;
         Status4.UncheckedState.FillColor = Color.FromArgb(0, 64, 0);
-        Status1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+        Status4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
         Status4.CheckedChanged += ReadOnly;
 
         Status5 = new Guna2CheckBox();
@@ -392,14 +439,14 @@ public class CustomOrder : Guna2Panel
         Status5.CheckedState.BorderRadius = 0;
         Status5.CheckedState.BorderThickness = 0;
         Status5.CheckedState.FillColor = Color.Green;
-        Status5.Location = new Point(550, 260);
+        Status5.Location = new Point(550, 300);
         Status5.Size = new Size(64, 19);
         Status5.Text = "Запуск";
         Status5.UncheckedState.BorderColor = Color.FromArgb(0, 64, 0);
         Status5.UncheckedState.BorderRadius = 0;
         Status5.UncheckedState.BorderThickness = 0;
         Status5.UncheckedState.FillColor = Color.FromArgb(0, 64, 0);
-        Status1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+        Status5.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
         Status5.CheckedChanged += ReadOnly;
 
         // Добавление элементов
@@ -408,6 +455,8 @@ public class CustomOrder : Guna2Panel
         this.Controls.Add(DescriptionText);
         this.Controls.Add(DescriptionLabelWorker);
         this.Controls.Add(DescriptionTextWorker);
+        this.Controls.Add(PriceLabel);
+        this.Controls.Add(PriceText);
         this.Controls.Add(Button);
         this.Controls.Add(IsMPCheck);
         this.Controls.Add(IsSiteCheck);
@@ -421,20 +470,44 @@ public class CustomOrder : Guna2Panel
         this.Controls.Add(ProgressBar);
     }
 
-    private void ReadOnly(object sender, EventArgs e)
+    private async void ReadOnly(object sender, EventArgs e)
     {
         if (sender is Guna2CheckBox checkBox)
         {
             switch (checkBox.Text)
             {
                 case "МП":
-                    checkBox.Checked = OrderInfo.IsMp;
+                    if (CurrentUser.Position is "Менеджер" or "Админ" && _isLoad)
+                    {
+                        OrderInfo.IsMp = checkBox.Checked;
+                        await _IWorkerRepository.UpdateDirectionMPAsync(OrderInfo.Id, checkBox.Checked);
+                        UpdateInfoOrderPanel(OrderInfo);
+                        await _mainForm.UpdateLocalOrder(OrderInfo);
+                    }
+                    else
+                        checkBox.Checked = OrderInfo.IsMp;
                     break;
                 case "Сайт":
-                    checkBox.Checked = OrderInfo.IsSite;
+                    if (CurrentUser.Position is "Менеджер" or "Админ" && _isLoad)
+                    {
+                        OrderInfo.IsSite = checkBox.Checked;
+                        await _IWorkerRepository.UpdateDirectionSiteAsync(OrderInfo.Id, checkBox.Checked);
+                        UpdateInfoOrderPanel(OrderInfo);
+                        await _mainForm.UpdateLocalOrder(OrderInfo);
+                    }
+                    else
+                        checkBox.Checked = OrderInfo.IsSite;
                     break;
                 case "Десктоп":
-                    checkBox.Checked = OrderInfo.IsWin;
+                    if (CurrentUser.Position is "Менеджер" or "Админ" && _isLoad)
+                    {
+                        OrderInfo.IsWin = checkBox.Checked;
+                        await _IWorkerRepository.UpdateDirectionPCAsync(OrderInfo.Id, checkBox.Checked);
+                        UpdateInfoOrderPanel(OrderInfo);
+                        await _mainForm.UpdateLocalOrder(OrderInfo);
+                    }
+                    else
+                        checkBox.Checked = OrderInfo.IsWin;
                     break;
                 case "Анализ требований":
                     checkBox.Checked = OrderInfo.Status == "Оценка" || OrderInfo.Status == "Согласование" || OrderInfo.Status == "Разработка" || OrderInfo.Status == "Приемка" || OrderInfo.Status == "Запуск" || OrderInfo.Status == "Готов" || OrderInfo.Status == "Уточнение деталей";
@@ -459,7 +532,7 @@ public class CustomOrder : Guna2Panel
     {
         if (sender is Guna2TextBox textBox)
         {
-            if (textBox.Text.Trim() != OrderInfo.DescriptionWorker.Trim())
+            if (textBox.Text.Trim() != OrderInfo.DescriptionWorker.Trim() && textBox.Name != "PriceText")
             {
                 var dialogResult = MessageBox.Show($"Было изменено описание, сохранить?", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -487,6 +560,54 @@ public class CustomOrder : Guna2Panel
                     OrderInfo.DescriptionWorker = textBox.Text;
 
                     await _mainForm.UpdateLocalOrder(OrderInfo);
+                }
+            }
+            else
+            {
+                if (textBox.Text.Trim() != OrderInfo.Price.ToString().Trim() && CurrentUser.Position is "Менеджер" or "Админ" && textBox.Name == "PriceText")
+                {
+                    if (!IsValidNumberDecimal(textBox.Text))
+                    {
+                        MessageBox.Show($"Некорректное значение цены!", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        _tryLeave = 0;
+                        textBox.Text = OrderInfo.Price.ToString();
+                        return;
+                    }
+
+                    var dialogResult = MessageBox.Show($"Была изменена цена, сохранить?", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (dialogResult == DialogResult.No)
+                    {
+                        _tryLeave++;
+                        if (_tryLeave == 2)
+                        {
+                            var dialogResult2 = MessageBox.Show($"Откатить изменения?", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                            if (dialogResult2 == DialogResult.Yes)
+                            {
+                                _tryLeave = 0;
+                                textBox.Text = OrderInfo.Price.ToString();
+                                return;
+                            }
+                        }
+
+                        textBox.Focus();
+                    }
+                    else
+                    {
+                        _tryLeave = 0;
+                        await workerRepository1.SetNewPriceAsync(OrderInfo.Id, Convert.ToDecimal(textBox.Text));
+                        OrderInfo.Price = Convert.ToDecimal(textBox.Text);
+
+                        await _mainForm.UpdateLocalOrder(OrderInfo);
+                    }
+                }
+                else if (textBox.Text.Trim() != OrderInfo.Price.ToString().Trim() && CurrentUser.Position is not "Менеджер" and not "Админ")
+                {
+                    MessageBox.Show($"Вы не можете обновлять цену для заказа!", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    _tryLeave = 0;
+                    textBox.Text = OrderInfo.Price.ToString();
+                    return;
                 }
             }
         }
@@ -555,5 +676,14 @@ public class CustomOrder : Guna2Panel
         await clientRepository.SetScore(OrderInfo.Id, dialogResultInt);
 
         return dialogResultInt;
+    }
+
+    static bool IsValidNumberDecimal(string text)
+    {
+        if (decimal.TryParse(text, NumberStyles.Any, CultureInfo.GetCultureInfo("ru-RU"), out decimal num))
+        {
+            return num > 0m && num <= decimal.MaxValue;
+        }
+        return false;
     }
 }

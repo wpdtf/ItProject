@@ -52,4 +52,33 @@ public interface IWorkerRepository
     /// </summary>
     /// <param name="orderId">Какую заявку</param>
     Task<Order> SetNextStatusOrderAsync(int orderId);
+
+    /// <summary>
+    /// Обновить направление мобильного приложения
+    /// </summary>
+    /// <param name="orderId">заказ</param>
+    /// <param name="why">новое значение</param>
+    Task<Order> UpdateDirectionMPAsync(int orderId, bool why);
+
+    /// <summary>
+    /// Обновить направление компьютерного направления
+    /// </summary>
+    /// <param name="orderId">заказ</param>
+    /// <param name="why">новое значение</param>
+    Task<Order> UpdateDirectionPCAsync(int orderId, bool why);
+
+    /// <summary>
+    /// Обновить направление сайтового направления
+    /// </summary>
+    /// <param name="orderId">заказ</param>
+    /// <param name="why">новое значение</param>
+    Task<Order> UpdateDirectionSiteAsync(int orderId, bool why);
+
+    /// <summary>
+    /// Обновить цену заказа
+    /// </summary>
+    /// <param name="orderId">какого заказа</param>
+    /// <param name="price">Новая цена</param>
+    /// <returns></returns>
+    Task<Order> SetNewPriceAsync(int orderId, decimal price);
 } 

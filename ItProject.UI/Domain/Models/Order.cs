@@ -62,4 +62,9 @@ public class Order
     /// Оценка по заказ
     /// </summary>
     public int Score { get; set; }
+
+    /// <summary>
+    /// номер телефона клиента
+    /// </summary>
+    public string Phone { get; set; }
 }

@@ -110,4 +110,40 @@ public class SendToBack
 
         throw new Exception("Что-то пошло не так!");
     }
+
+    public async Task Agreement(string alias, int orderId, decimal price)
+    {
+        var response = await _httpClient.PostAsync($"Agreement?alias={alias}&orderId={orderId}&price={price}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        throw new Exception("Что-то пошло не так!");
+    }
+
+    public async Task Acceptance(string alias, int orderId)
+    {
+        var response = await _httpClient.PostAsync($"Acceptance?alias={alias}&orderId={orderId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        throw new Exception("Что-то пошло не так!");
+    }
+
+    public async Task Success(string alias, int orderId)
+    {
+        var response = await _httpClient.PostAsync($"Success?alias={alias}&orderId={orderId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        throw new Exception("Что-то пошло не так!");
+    }
 }
