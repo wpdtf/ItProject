@@ -24,6 +24,9 @@
 		<Compile Update="FormDialog\FormPasswordRecovery.cs">
 		  <SubType>Form</SubType>
 		</Compile>
+		<Compile Update="FormDialog\FormWorker.cs">
+		  <SubType>Form</SubType>
+		</Compile>
 		<Compile Update="MyElement\CustomMessage.cs">
 		  <SubType>Component</SubType>
 		</Compile>
@@ -34,9 +37,6 @@
 			<SubType>Form</SubType>
 		</Compile>
 		<Compile Update="FormDialog\FormChat.cs">
-		  <SubType>Form</SubType>
-		</Compile>
-		<Compile Update="FormList.cs">
 		  <SubType>Form</SubType>
 		</Compile>
 		<Compile Update="MainForm.cs">

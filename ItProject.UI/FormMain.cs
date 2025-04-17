@@ -1,3 +1,4 @@
+using Azure.Core;
 using Guna.UI2.WinForms;
 using ItProject.UI.Client;
 using ItProject.UI.customElement;
@@ -6,9 +7,12 @@ using ItProject.UI.Domain.Models;
 using ItProject.UI.FormDialog;
 using ItProject.UI.Infrastructure.Repositories;
 using ItProject.UI.StaticModel;
+using OfficeOpenXml;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace ItProject.UI;
@@ -39,19 +43,31 @@ public partial class FormMain : Form
 
     private void SetAccess(string role)
     {
-        switch (role.ToLower())
+        switch (role.ToLower().Trim())
         {
             case "разработчик по":
                 guna2TabControl1.TabPages.Remove(tabPage1);
+                guna2TabControl1.TabPages.Remove(tabPage3);
+                guna2TabControl1.TabPages.Remove(tabPage4);
                 break;
             case "менеджер":
                 guna2TabControl1.TabPages.Remove(tabPage1);
+                guna2TabControl1.TabPages.Remove(tabPage3);
+                guna2TabControl1.TabPages.Remove(tabPage3);
                 break;
             case "разработчик мп":
                 guna2TabControl1.TabPages.Remove(tabPage1);
+                guna2TabControl1.TabPages.Remove(tabPage3);
+                guna2TabControl1.TabPages.Remove(tabPage4);
                 break;
             case "верстальщик":
                 guna2TabControl1.TabPages.Remove(tabPage1);
+                guna2TabControl1.TabPages.Remove(tabPage3);
+                guna2TabControl1.TabPages.Remove(tabPage4);
+                break;
+            case "":
+                guna2TabControl1.TabPages.Remove(tabPage3);
+                guna2TabControl1.TabPages.Remove(tabPage4);
                 break;
         }
     }
@@ -79,6 +95,11 @@ public partial class FormMain : Form
                 guna2CircleProgressBar1.Visible = false;
                 guna2CircleProgressBar1.Animated = false;
 
+                break;
+            case "tabPage3":
+                await UpdateWorkerInfoAsync();
+                break;
+            case "tabPage4":
                 break;
             default:
                 MessageBox.Show("Не определена открытая форма, перезапустите приложение", "Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -343,5 +364,161 @@ public partial class FormMain : Form
     private async void guna2Button1_Click(object sender, EventArgs e)
     {
         await UpdateListLocalOrder();
+    }
+
+    private void guna2Button4_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    public async Task UpdateWorkerInfoAsync()
+    {
+        try
+        {
+            var listWorker = await _repository2.GetListWorkerAsync();
+
+            guna2DataGridView1.DataSource = listWorker;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void guna2Button3_Click(object sender, EventArgs e)
+    {
+        FormWorker form = new(_repository2, true, new WorkerLogin(), this);
+        form.Show();
+    }
+
+    private bool IsSelecedRow()
+    {
+        if (guna2DataGridView1.SelectedRows.Count <= 0)
+        {
+            MessageBox.Show("Выберите запись для данного действия.", "Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return false;
+        }
+        return true;
+    }
+
+    private async void guna2Button2_Click(object sender, EventArgs e)
+    {
+        if (!IsSelecedRow())
+        {
+            return;
+        }
+
+        var selectedRow = guna2DataGridView1.SelectedRows[0];
+        var selectedModel = selectedRow.DataBoundItem;
+
+        if (selectedModel is WorkerLogin selectedWorker)
+        {
+            FormWorker form = new(_repository2, false, selectedWorker, this);
+            form.Show();
+        }
+    }
+
+    private void guna2Button6_Click(object sender, EventArgs e)
+    {
+        var data = guna2DataGridView2.DataSource;
+
+        if (data is List<ReportScore> or List<ReportAmount>)
+        {
+            using var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel Files|*.xlsx";
+            saveFileDialog.Title = "Сохранить файл Excel";
+            saveFileDialog.FileName = "Отчет.xlsx";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                if (data is List<ReportAmount> salesReports)
+                {
+                    WriteToExcel(salesReports, filePath);
+                }
+                else if (data is List<ReportScore> popularityReports)
+                {
+                    WriteToExcel(popularityReports, filePath);
+                }
+
+                MessageBox.Show($"Данные успешно записаны в файл: {filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+    }
+
+    private async void guna2Button4_Click_1(object sender, EventArgs e)
+    {
+        try
+        {
+            var listWorker = await _repository2.GetReportAmountAsync();
+
+            guna2DataGridView2.DataSource = listWorker;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void guna2Button5_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            var listWorker = await _repository2.GetReportScoreAsync();
+
+            guna2DataGridView2.DataSource = listWorker;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    /// <summary>
+    /// Записывает список объектов в Excel-файл.
+    /// </summary>
+    /// <typeparam name="T">Тип модели данных.</typeparam>
+    /// <param name="data">Список объектов для записи.</param>
+    /// <param name="filePath">Путь для сохранения.</param>
+    public void WriteToExcel<T>(IEnumerable<T> data, string filePath)
+    {
+        // Устанавливаем контекст лицензии для EPPlus (требуется для коммерческого использования)
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        // Создаем новый Excel-пакет
+        using (var package = new ExcelPackage())
+        {
+            // Добавляем лист в файл
+            var worksheet = package.Workbook.Worksheets.Add("Data");
+
+            // Получаем свойства модели
+            var properties = typeof(T).GetProperties();
+
+            // Записываем заголовки столбцов
+            for (int i = 0; i < properties.Length; i++)
+            {
+                worksheet.Cells[1, i + 1].Value = properties[i].Name;
+            }
+
+            // Записываем данные
+            int row = 2;
+            foreach (var item in data)
+            {
+                for (int col = 0; col < properties.Length; col++)
+                {
+                    var value = properties[col].GetValue(item)?.ToString() ?? string.Empty;
+                    worksheet.Cells[row, col + 1].Value = value;
+                }
+                row++;
+            }
+
+            // Авто-подгонка ширины столбцов
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+            // Сохраняем файл
+            var fileInfo = new FileInfo(filePath);
+            package.SaveAs(fileInfo);
+        }
     }
 }

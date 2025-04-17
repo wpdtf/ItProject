@@ -81,4 +81,44 @@ public interface IWorkerRepository
     /// <param name="price">Новая цена</param>
     /// <returns></returns>
     Task<Order> SetNewPriceAsync(int orderId, decimal price);
+
+    /// <summary>
+    /// Список сотрудников
+    /// </summary>
+    Task<List<WorkerLogin>> GetListWorkerAsync();
+
+    /// <summary>
+    /// Получить отдельного сотрудника
+    /// </summary>
+    /// <param name="workerId">Список сотрудников</param>
+    Task<WorkerLogin> GetWorkerAsync(int workerId);
+
+    /// <summary>
+    /// Добавление сотрудника
+    /// </summary>
+    /// <param name="workerLogin">Данные по сотруднику</param>
+    Task<WorkerLogin> AddWorkerAsync(WorkerLogin workerLogin);
+
+    /// <summary>
+    /// Обновление сотрудника
+    /// </summary>
+    /// <param name="workerLogin">Данные по сотруднику</param>
+    Task<WorkerLogin> UpdateWorkerAsync(WorkerLogin workerLogin);
+
+    /// <summary>
+    /// Обновление пользователя для сотрудника
+    /// </summary>
+    /// <param name="workerLogin"></param>
+    /// <returns></returns>
+    Task<WorkerLogin> UpdateUserWorkerAsync(WorkerLogin workerLogin);
+
+    /// <summary>
+    /// Отчет по доходам
+    /// </summary>
+    Task<List<ReportAmount>> GetReportAmountAsync();
+
+    /// <summary>
+    /// Отчет по оценкам
+    /// </summary>
+    Task<List<ReportScore>> GetReportScoreAsync();
 } 
