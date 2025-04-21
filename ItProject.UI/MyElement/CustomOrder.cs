@@ -737,7 +737,6 @@ public class CustomOrder : Guna2Panel
             if (result.Status == "Готов" && result.Score == -1 && _isScore == false && CurrentUser.Position.Count() == 0)
             {
                 result.Score = await UpdateScore(clientRepository, result);
-                _isScore = false;
             }
             if (OrderInfo.DescriptionWorker != DescriptionTextWorker.Text)
                 UpdateInfoOrderPanel(result, false);
@@ -775,6 +774,7 @@ public class CustomOrder : Guna2Panel
 
         await clientRepository.SetScore(OrderInfo.Id, dialogResultInt);
 
+        _isScore = false;
         return dialogResultInt;
     }
 
