@@ -35,9 +35,6 @@ public partial class FormMain : Form
 
     private async void FormMain_Load(object sender, EventArgs e)
     {
-        CurrentUser.Id = 2;
-        CurrentUser.Position = "Менеджер";
-
         SetAccess(CurrentUser.Position);
     }
 
@@ -124,14 +121,14 @@ public partial class FormMain : Form
                 if (item.Status is "Согласование" or "Приемка")
                 {
                     var result = await _repository.SetNextStatusOrderAsync(element.OrderInfo.Id);
-                    element.UpdateInfoOrderPanel(result);
+                    element.UpdateInfoOrderPanel(result, true);
                 }
                 else if (item.Status is "Готов" or "Уточнение деталей")
                 {
                     if (item.Status == "Готов")
                     {
                         var newStatus = await _repository.CreateNewMessageStatusAsync(element.OrderInfo.Id);
-                        element.UpdateInfoOrderPanel(newStatus);
+                        element.UpdateInfoOrderPanel(newStatus, true);
                         await UpdateLocalOrder(newStatus);
                     }
 
@@ -147,11 +144,10 @@ public partial class FormMain : Form
 
                     await UpdateLocalOrder(result);
 
-                    element.UpdateInfoOrderPanel(result);
+                    element.UpdateInfoOrderPanel(result, true);
                 }
                 else if (item.Status is "Новый" or "Проверка" or "Оценка" or "Разработка" or "Запуск")
                 {
-                    var typeMessage = 0;
                     var question = new DialogResult();
 
                     switch (item.Status)
@@ -171,12 +167,12 @@ public partial class FormMain : Form
                             }
                             break;
                         case "Оценка":
-                            question = MessageBox.Show($"Отправить на согласование клиенту проект с итоговой ценой {item.Price}?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            question = MessageBox.Show($"Отправить на согласование клиенту проект с итоговой ценой {element.OrderInfo.Price}?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                             if (question == DialogResult.No)
                                 return;
 
-                            typeMessage = 1;
+                            await _sendToBack.Agreement(element.alias, element.OrderInfo.Id, element.OrderInfo.Price);
                             break;
                         case "Разработка":
                             question = MessageBox.Show($"Вы подтверждаете готовность проекта и его отправку на приемку клиенту?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -184,7 +180,7 @@ public partial class FormMain : Form
                             if (question == DialogResult.No)
                                 return;
 
-                            typeMessage = 2;
+                            await _sendToBack.Acceptance(element.alias, element.OrderInfo.Id);
                             break;
                         case "Запуск":
                             question = MessageBox.Show($"Вы подтверждаете запуск проекта и закрытие заказа?", "Уведомления", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -192,7 +188,7 @@ public partial class FormMain : Form
                             if (question == DialogResult.No)
                                 return;
 
-                            typeMessage = 3;
+                            await _sendToBack.Success(element.alias, element.OrderInfo.Id);
                             break;
                     }
 

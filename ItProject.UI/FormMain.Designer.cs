@@ -768,7 +768,7 @@ partial class FormMain
         Margin = new Padding(4);
         Name = "FormMain";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "Form1";
+        Text = "Ит заказы";
         Load += FormMain_Load;
         panel2.ResumeLayout(false);
         panel2.PerformLayout();

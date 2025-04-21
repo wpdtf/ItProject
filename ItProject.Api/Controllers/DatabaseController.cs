@@ -113,7 +113,7 @@ public class DatabaseController(IRepository repository, IEmailService service) :
     [HttpPost("Agreement")]
     public async Task<ActionResult<AuthResult>> AgreementAsync([FromQuery] string alias, int orderId, decimal price)
     {
-        var info = await _repository.CloseTicketAsync(orderId);
+        var info = await _repository.GetInfoSendEmailAsync(orderId);
 
         await _service.SetAgreementOrderAsync(info.Email, info.Name, $"{alias}-{orderId}", price);
 
@@ -130,7 +130,7 @@ public class DatabaseController(IRepository repository, IEmailService service) :
     [HttpPost("Acceptance")]
     public async Task<ActionResult<AuthResult>> SetAcceptanceAsync([FromQuery] string alias, int orderId)
     {
-        var info = await _repository.CloseTicketAsync(orderId);
+        var info = await _repository.GetInfoSendEmailAsync(orderId);
 
         await _service.SetAcceptanceOrderAsync(info.Email, info.Name, $"{alias}-{orderId}");
 
@@ -147,7 +147,7 @@ public class DatabaseController(IRepository repository, IEmailService service) :
     [HttpPost("Success")]
     public async Task<ActionResult<AuthResult>> SetSuccessAsync([FromQuery] string alias, int orderId)
     {
-        var info = await _repository.CloseTicketAsync(orderId);
+        var info = await _repository.GetInfoSendEmailAsync(orderId);
 
         await _service.SetSuccessAsync(info.Email, info.Name, $"{alias}-{orderId}");
 

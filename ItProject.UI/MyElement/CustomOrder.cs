@@ -44,6 +44,12 @@ public class CustomOrder : Guna2Panel
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public Guna2TextBox PriceText { get; private set; }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    public Guna2HtmlLabel PrioritetLabel { get; private set; }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    public Guna2TextBox PrioritetText { get; private set; }
+
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public Guna2Button Button { get; private set; }
@@ -125,24 +131,20 @@ public class CustomOrder : Guna2Panel
     public CustomOrder(Order order, IWorkerRepository workerRepository) : this()
     {
         _IWorkerRepository = workerRepository;
-        UpdateInfoOrderPanel(order);
+        UpdateInfoOrderPanel(order, true);
         _isLoad = true;
     }
 
-    public void UpdateInfoOrderPanel(Order order)
+    public void UpdateInfoOrderPanel(Order order, bool isUpdateText = true)
     {
         OrderInfo = order;
 
-        var label = "";
-        label += order.IsMp ? "МП" : "";
-        label += order.IsSite ? "С" : "";
-        label += order.IsWin ? "Д" : "";
 
-        alias = label;
+        alias = GetAlias();
 
         DescriptionText.Text = order.Description;
 
-        LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate} на {order.Price} руб.";
+        LabelInfo.Text = $"Заказ {alias}-{order.Id} от {order.DateCreate} на {order.Price} руб.";
 
         PriceLabel.Visible = false;
         PriceText.Visible = false;
@@ -154,17 +156,24 @@ public class CustomOrder : Guna2Panel
 
         if (CurrentUser.Position.Count() > 0)
         {
-            LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate}. Тел. {order.Phone}.";
+            LabelInfo.Text = $"Заказ {alias}-{order.Id} от {order.DateCreate}. Тел. {order.Phone}.";
 
             if (order.Score > 0)
-                LabelInfo.Text = $"Заказ {label}-{order.Id} от {order.DateCreate}. Тел. {order.Phone}. Оценен клиентом на: {order.Score} балл";
+                LabelInfo.Text = $"Заказ {alias}-{order.Id} от {order.DateCreate}. Тел. {order.Phone}. Оценен клиентом на: {order.Score} балл";
 
             PriceLabel.Visible = true;
             PriceText.Visible = true;
             PriceText.Text = order.Price.ToString();
 
+            PrioritetLabel.Visible = true;
+            PrioritetText.Visible = true;
+            PrioritetText.Text = order.Prioritet.ToString();
+
             DescriptionTextWorker.Visible = true;
-            DescriptionTextWorker.Text = order.DescriptionWorker;
+            
+            if (isUpdateText)
+                DescriptionTextWorker.Text = order.DescriptionWorker;
+
             DescriptionLabelWorker.Visible = true;
             DescriptionLabel.Text = "Описание от клиента:";
             DescriptionText.Size = new Size(350, 180);
@@ -173,6 +182,7 @@ public class CustomOrder : Guna2Panel
                       order.Status == "Новый" ? "Данные уточнены" :
                       order.Status == "Проверка" ? "На оценку" :
                       order.Status == "Оценка" ? "На согласование" :
+                      order.Status == "Запуск" ? "Запущено" :
                       order.Status == "Уточнение деталей" ? "Ответить на обр." : "";
         }
 
@@ -199,6 +209,16 @@ public class CustomOrder : Guna2Panel
         Status5.Checked = order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
 
         Button.Visible = Button.Text != "";
+    }
+
+    public string GetAlias()
+    {
+        var label = "";
+        label += OrderInfo.IsMp ? "МП" : "";
+        label += OrderInfo.IsSite ? "С" : "";
+        label += OrderInfo.IsWin ? "Д" : "";
+
+        return label;
     }
 
     private void InitializeComponent()
@@ -299,6 +319,33 @@ public class CustomOrder : Guna2Panel
         PriceText.Size = new Size(110, 25);
         PriceText.Visible = false;
         PriceText.Leave += LeaveAsync;
+
+        PrioritetLabel = new Guna2HtmlLabel();
+        PrioritetLabel.BackColor = Color.Transparent;
+        PrioritetLabel.Font = new Font("Segoe UI", 9F);
+        PrioritetLabel.ForeColor = Color.Black;
+        PrioritetLabel.Location = new Point(180, 45);
+        PrioritetLabel.Size = new Size(50, 17);
+        PrioritetLabel.Text = "Приоритет:";
+        PrioritetLabel.Visible = false;
+
+        PrioritetText = new Guna2TextBox();
+        PrioritetText.Name = "PrioritetText";
+        PrioritetText.BorderRadius = 12;
+        PrioritetText.Cursor = Cursors.IBeam;
+        PrioritetText.DisabledState.BorderColor = Color.Green;
+        PrioritetText.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+        PrioritetText.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+        PrioritetText.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+        PrioritetText.FocusedState.BorderColor = Color.Green;
+        PrioritetText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+        PrioritetText.ForeColor = Color.Black;
+        PrioritetText.HoverState.BorderColor = Color.Green;
+        PrioritetText.Location = new Point(260, 40);
+        PrioritetText.SelectedText = "";
+        PrioritetText.Size = new Size(110, 25);
+        PrioritetText.Visible = false;
+        PrioritetText.Leave += LeaveAsync;
 
         Button = new Guna2Button();
         Button.Animated = true;
@@ -457,6 +504,8 @@ public class CustomOrder : Guna2Panel
         this.Controls.Add(DescriptionTextWorker);
         this.Controls.Add(PriceLabel);
         this.Controls.Add(PriceText);
+        this.Controls.Add(PrioritetLabel);
+        this.Controls.Add(PrioritetText);
         this.Controls.Add(Button);
         this.Controls.Add(IsMPCheck);
         this.Controls.Add(IsSiteCheck);
@@ -532,7 +581,7 @@ public class CustomOrder : Guna2Panel
     {
         if (sender is Guna2TextBox textBox)
         {
-            if (textBox.Text.Trim() != OrderInfo.DescriptionWorker.Trim() && textBox.Name != "PriceText")
+            if (textBox.Text.Trim() != OrderInfo.DescriptionWorker.Trim() && textBox.Name != "PriceText" && textBox.Name != "PrioritetText")
             {
                 var dialogResult = MessageBox.Show($"Было изменено описание, сохранить?", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -562,7 +611,7 @@ public class CustomOrder : Guna2Panel
                     await _mainForm.UpdateLocalOrder(OrderInfo);
                 }
             }
-            else
+            else if (textBox.Name == "PriceText")
             {
                 if (textBox.Text.Trim() != OrderInfo.Price.ToString().Trim() && CurrentUser.Position is "Менеджер" or "Админ" && textBox.Name == "PriceText")
                 {
@@ -610,6 +659,54 @@ public class CustomOrder : Guna2Panel
                     return;
                 }
             }
+            else if (textBox.Name == "PrioritetText")
+            {
+                if (textBox.Text.Trim() != OrderInfo.Prioritet.ToString().Trim() && CurrentUser.Position is "Менеджер" or "Админ")
+                {
+                    if (!IsValidNumberDecimal(textBox.Text))
+                    {
+                        MessageBox.Show($"Некорректное значение приоритета!", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        _tryLeave = 0;
+                        textBox.Text = OrderInfo.Price.ToString();
+                        return;
+                    }
+
+                    var dialogResult = MessageBox.Show($"Был изменен приоритет, сохранить?", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (dialogResult == DialogResult.No)
+                    {
+                        _tryLeave++;
+                        if (_tryLeave == 2)
+                        {
+                            var dialogResult2 = MessageBox.Show($"Откатить изменения?", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                            if (dialogResult2 == DialogResult.Yes)
+                            {
+                                _tryLeave = 0;
+                                textBox.Text = OrderInfo.Prioritet.ToString();
+                                return;
+                            }
+                        }
+
+                        textBox.Focus();
+                    }
+                    else
+                    {
+                        _tryLeave = 0;
+                        await workerRepository1.UpdatePrioritetAsync(OrderInfo.Id, Convert.ToInt32(textBox.Text));
+                        OrderInfo.Prioritet = Convert.ToInt32(textBox.Text);
+
+                        await _mainForm.UpdateLocalOrder(OrderInfo);
+                    }
+                }
+                else if (textBox.Text.Trim() != OrderInfo.Prioritet.ToString().Trim())
+                {
+                    MessageBox.Show($"Вы не можете обновлять приоритет для заказа!", "Уведомление", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    _tryLeave = 0;
+                    textBox.Text = OrderInfo.Prioritet.ToString();
+                    return;
+                }
+            }
         }
     }
 
@@ -642,8 +739,11 @@ public class CustomOrder : Guna2Panel
                 result.Score = await UpdateScore(clientRepository, result);
                 _isScore = false;
             }
+            if (OrderInfo.DescriptionWorker != DescriptionTextWorker.Text)
+                UpdateInfoOrderPanel(result, false);
+            else
+                UpdateInfoOrderPanel(result, true);
 
-            UpdateInfoOrderPanel(result);
         }
     }
 

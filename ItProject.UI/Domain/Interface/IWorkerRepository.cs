@@ -121,4 +121,11 @@ public interface IWorkerRepository
     /// Отчет по оценкам
     /// </summary>
     Task<List<ReportScore>> GetReportScoreAsync();
+
+    /// <summary>
+    /// Обновление приоритета заказа
+    /// </summary>
+    /// <param name="orderId">заказ</param>
+    /// <param name="prioritet">новый приоритет</param>
+    Task<Order> UpdatePrioritetAsync(int orderId, int prioritet);
 } 

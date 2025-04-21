@@ -164,6 +164,7 @@ partial class FormRegister
         _txtEmail.ForeColor = Color.Black;
         _txtEmail.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
         _txtEmail.Location = new Point(137, 74);
+        _txtEmail.MaxLength = 255;
         _txtEmail.Name = "_txtEmail";
         _txtEmail.PlaceholderText = "Почта";
         _txtEmail.SelectedText = "";

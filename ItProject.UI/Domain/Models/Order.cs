@@ -67,4 +67,9 @@ public class Order
     /// номер телефона клиента
     /// </summary>
     public string Phone { get; set; }
+
+    /// <summary>
+    /// приоритет заказа
+    /// </summary>
+    public int Prioritet { get; set; }
 }

@@ -212,7 +212,7 @@ partial class FormAuth : Form
         guna2TextBox1.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
         guna2TextBox1.Location = new Point(124, 72);
         guna2TextBox1.Margin = new Padding(4);
-        guna2TextBox1.MaxLength = 16;
+        guna2TextBox1.MaxLength = 255;
         guna2TextBox1.Name = "guna2TextBox1";
         guna2TextBox1.PlaceholderText = "Логин";
         guna2TextBox1.SelectedText = "";

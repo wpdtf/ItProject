@@ -46,4 +46,10 @@ public interface IRepository
     /// </summary>
     /// <param name="idOrder">По какому заказу</param>
     Task<CloseTicket> CloseTicketAsync(int idOrder);
+
+    /// <summary>
+    /// Получить данные для почты
+    /// </summary>
+    /// <param name="idOrder">По какому заказу</param>
+    Task<CloseTicket> GetInfoSendEmailAsync(int idOrder);
 } 

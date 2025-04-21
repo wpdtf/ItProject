@@ -154,4 +154,13 @@ public class WorkerRepository(DataBaseContext dbContext) : IWorkerRepository
         var result = await connection.QueryAsync<ReportScore>(sql);
         return result.ToList();
     }
+
+    /// <inheritdoc/>
+    public async Task<Order> UpdatePrioritetAsync(int orderId, int prioritet)
+    {
+        var sql = "exec dbo.ОбновитьПриоритетЗаказа @Ид, @Приоритет";
+        var parameters = new { Ид = orderId, Приоритет = prioritet };
+        var result = (await connection.QueryAsync<Order>(sql, parameters)).First();
+        return result;
+    }
 }

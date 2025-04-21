@@ -113,7 +113,7 @@ public class SendToBack
 
     public async Task Agreement(string alias, int orderId, decimal price)
     {
-        var response = await _httpClient.PostAsync($"Agreement?alias={alias}&orderId={orderId}&price={price}", null);
+        var response = await _httpClient.PostAsync($"Agreement?alias={alias}&orderId={orderId}&price={(price.ToString()).Replace(',', '.')}", null);
 
         if (response.IsSuccessStatusCode)
         {

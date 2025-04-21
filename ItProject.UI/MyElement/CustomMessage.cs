@@ -48,12 +48,12 @@ public class CustomMessage : Guna2Panel
         if (MessageInfo.NameCompanion != "")
         {
             OptionalLabel.ForeColor = Color.Black;
-            OptionalLabel.Location = new Point(0, 77);
+            OptionalLabel.Location = new Point(0, 70);
             OptionalLabel.Size = new Size(68, 17);
             OptionalLabel.Font = new Font("Segoe UI", 9F);
             OptionalLabel.Text = MessageInfo.NameCompanion;
 
-            DateSendLabel.Location = new Point(0, 100);
+            DateSendLabel.Location = new Point(0, 83);
             DateSendLabel.Size = new Size(87, 17);
 
             TextMessage.Location = new Point(0, 3);
@@ -65,7 +65,8 @@ public class CustomMessage : Guna2Panel
 
     public void UpdateInfoOrderPanel(MessageFromOrder message)
     {
-        OptionalLabel.Visible = !message.IsVisible;
+        if (MessageInfo.NameCompanion == "")
+            OptionalLabel.Visible = !message.IsVisible;
     }
 
     private void InitializeComponent()

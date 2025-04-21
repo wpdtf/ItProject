@@ -37,7 +37,7 @@ internal static class Program
         var clientRepository = _serviceProvider.GetRequiredService<IClientRepository>();
         var workerRepository = _serviceProvider.GetRequiredService<IWorkerRepository>();
         var sendToBack = _serviceProvider.GetRequiredService<SendToBack>();
-        Application.Run(new FormMain(sendToBack, clientRepository, workerRepository));
-        //Application.Run(new FormAuth(sendToBack, clientRepository, workerRepository));
+        //Application.Run(new FormMain(sendToBack, clientRepository, workerRepository));
+        Application.Run(new FormAuth(sendToBack, clientRepository, workerRepository));
     }
 }
