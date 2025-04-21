@@ -118,14 +118,14 @@ public partial class FormMain : Form
 
             element.Button.Click += async (s, e) =>
             {
-                if (item.Status is "Согласование" or "Приемка")
+                if (element.OrderInfo.Status is "Согласование" or "Приемка")
                 {
                     var result = await _repository.SetNextStatusOrderAsync(element.OrderInfo.Id);
                     element.UpdateInfoOrderPanel(result, true);
                 }
-                else if (item.Status is "Готов" or "Уточнение деталей")
+                else if (element.OrderInfo.Status is "Готов" or "Уточнение деталей")
                 {
-                    if (item.Status == "Готов")
+                    if (element.OrderInfo.Status == "Готов")
                     {
                         var newStatus = await _repository.CreateNewMessageStatusAsync(element.OrderInfo.Id);
                         element.UpdateInfoOrderPanel(newStatus, true);
@@ -146,21 +146,21 @@ public partial class FormMain : Form
 
                     element.UpdateInfoOrderPanel(result, true);
                 }
-                else if (item.Status is "Новый" or "Проверка" or "Оценка" or "Разработка" or "Запуск")
+                else if (element.OrderInfo.Status is "Новый" or "Проверка" or "Оценка" or "Разработка" or "Запуск")
                 {
                     var question = new DialogResult();
 
-                    switch (item.Status)
+                    switch (element.OrderInfo.Status)
                     {
                         case "Новый":
-                            if (!item.IsMp && !item.IsWin && !item.IsSite)
+                            if (!element.IsMPCheck.Checked && !element.IsWinCheck.Checked && !element.IsSiteCheck.Checked)
                             {
                                 MessageBox.Show("Заполните направления разработки!", "Уведомления", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 return;
                             }
                             break;
                         case "Проверка":
-                            if (item.DescriptionWorker.Trim().Count() == 0)
+                            if (element.DescriptionTextWorker.Text.Trim().Count() == 0)
                             {
                                 MessageBox.Show("Заполните описание сотрудника, необходимо для конечной оценки!", "Уведомления", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 return;
@@ -192,7 +192,7 @@ public partial class FormMain : Form
                             break;
                     }
 
-                    await _repository2.SetNextStatusOrderAsync(item.Id);
+                    await _repository2.SetNextStatusOrderAsync(element.OrderInfo.Id);
                     await UpdateListLocalOrder();
                 }
             };
