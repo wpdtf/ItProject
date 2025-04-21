@@ -203,10 +203,10 @@ public class CustomOrder : Guna2Panel
         IsSiteCheck.Checked = order.IsSite;
 
         Status1.Checked = order.Status == "Оценка" || order.Status == "Согласование" || order.Status == "Разработка" || order.Status == "Приемка" || order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
-        Status2.Checked = order.Status == "Согласование" || order.Status == "Разработка" || order.Status == "Приемка" || order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
-        Status3.Checked = order.Status == "Разработка" || order.Status == "Приемка" || order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
-        Status4.Checked = order.Status == "Приемка" || order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
-        Status5.Checked = order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
+        Status2.Checked = order.Status == "Разработка" || order.Status == "Приемка" || order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
+        Status3.Checked = order.Status == "Приемка" || order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
+        Status4.Checked = order.Status == "Запуск" || order.Status == "Готов" || order.Status == "Уточнение деталей";
+        Status5.Checked = order.Status == "Готов" || order.Status == "Уточнение деталей";
 
         Button.Visible = Button.Text != "";
     }
