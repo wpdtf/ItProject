@@ -152,7 +152,7 @@ public class CustomOrder : Guna2Panel
         Button.Text = order.Status == "Согласование" ? "Согласовать" :
                       order.Status == "Приемка" ? "Принять" :
                       order.Status == "Готов" ? "Создать обр." :
-                      order.Status == "Уточнение деталей" ? "Проверить обр." : "";
+                      order.Status == "Уточнение деталей" && order.IsActiveChat ? "Проверить обр." : "";
 
         if (CurrentUser.Position.Count() > 0)
         {
@@ -183,11 +183,11 @@ public class CustomOrder : Guna2Panel
                       order.Status == "Проверка" ? "На оценку" :
                       order.Status == "Оценка" ? "На согласование" :
                       order.Status == "Запуск" ? "Запущено" :
-                      order.Status == "Уточнение деталей" ? "Ответить на обр." : "";
+                      order.Status == "Уточнение деталей" && order.IsActiveChat ? "Ответить на обр." : "";
         }
 
         _isBlinking = order.IsVisible;
-        if (_isBlinking)
+        if (_isBlinking && order.IsActiveChat)
             StartBlinkingAsync();
 
         ProgressBar.Value = order.Status == "Новый" ? 0 :

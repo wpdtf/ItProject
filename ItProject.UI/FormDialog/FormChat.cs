@@ -30,7 +30,7 @@ public partial class FormChat : Form
         UpdateListMessageAsync();
     }
 
-    private async Task UpdateListMessageAsync()
+    public async Task UpdateListMessageAsync()
     {
         flowLayoutPanel1.Controls.Clear();
 

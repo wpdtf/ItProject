@@ -72,4 +72,9 @@ public class Order
     /// приоритет заказа
     /// </summary>
     public int Prioritet { get; set; }
+
+    /// <summary>
+    /// Активен ли чат по заказу
+    /// </summary>
+    public bool IsActiveChat { get; set; }
 }

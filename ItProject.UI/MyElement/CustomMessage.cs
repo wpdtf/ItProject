@@ -1,6 +1,7 @@
 ﻿using Guna.UI2.WinForms;
 using ItProject.UI.Domain.Interface;
 using ItProject.UI.Domain.Models;
+using ItProject.UI.FormDialog;
 using ItProject.UI.StaticModel;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -41,6 +42,7 @@ public class CustomMessage : Guna2Panel
     public CustomMessage(MessageFromOrder message) : this()
     {
         MessageInfo = message;
+        FormChat = formChat;
 
         TextMessage.Text = MessageInfo.TextMessage;
         DateSendLabel.Text = $"{MessageInfo.DateSendMessage}";
